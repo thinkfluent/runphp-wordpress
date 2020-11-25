@@ -1,0 +1,29 @@
+version: '2'
+networks:
+  default:
+    external:
+      name: docker-compose
+services:
+  memcached:
+    image: memcached:1.4.36-alpine
+    ports:
+      - 11211:11211
+  mysql8:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: letmein
+      MYSQL_DATABASE: wordpress
+  wordpress:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - 8080:80
+    environment:
+      PORT: 80
+      RUNPHP_MODE: development
+      RUNPHP_ALLOW_PRODUCTION_ADMIN: "true"
+    volumes:
+      - .:/app
